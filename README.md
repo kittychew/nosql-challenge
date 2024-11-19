@@ -1,142 +1,143 @@
 # NoSQL Challenge: UK Food Hygiene Data
 
+# Eat Safe, Love
+
+A MongoDB-based project for analyzing and maintaining the UK Food Establishments database. This project demonstrates database setup, CRUD operations, and data cleaning using Python and PyMongo.
+
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Technologies Used](#technologies-used)
+3. [Setup Instructions](#setup-instructions)
+4. [Key Features](#key-features)
+5. [Code Overview](#code-overview)
+6. [Project Highlights](#project-highlights)
+7. [Future Improvements](#future-improvements)
+8. [License](#license)
+
+---
+
 ## Project Overview
 
-In this project, I evaluated food hygiene rating data provided by the UK Food Standards Agency. The goal was to process and analyze the data for the editors of *Eat Safe, Love* magazine, helping them make data-driven decisions about which establishments to focus on for future articles. This challenge involved working with MongoDB, performing database manipulations, and running various queries and analyses using Python.
+The purpose of this project is to showcase the ability to work with large datasets in a MongoDB database. Specifically, the project involves:
+- Setting up a MongoDB database for food establishments in the UK.
+- Performing CRUD (Create, Read, Update, Delete) operations on the data.
+- Cleaning and transforming data for analysis.
+- Writing Python scripts for database interactions.
+- Preparing the database for further analysis in future applications.
 
-## Files and Programs Used
+---
 
-- **establishments.json**: Data file provided by the UK Food Standards Agency containing food hygiene ratings for various establishments across the UK.
-- **NoSQL_setup_starter.ipynb**: Jupyter notebook used for database setup, data import, and updates.
-- **NoSQL_analysis_starter.ipynb**: Jupyter notebook used for exploratory data analysis.
-- **Python**: The primary programming language for this project.
-- **PyMongo**: Python library used to interact with MongoDB.
-- **Pretty Print (pprint)**: Python library used to format and print query results.
+## Technologies Used
+
+- **Python**: For scripting and interacting with MongoDB.
+- **PyMongo**: MongoDB driver for Python.
+- **MongoDB**: NoSQL database for handling unstructured data.
+- **Jupyter Notebook**: Interactive development environment.
+- **Git**: Version control for code management.
+- **Terminal/Command Line**: For database imports and interaction.
+
+---
 
 ## Setup Instructions
 
-1. **Importing Data**: 
-   - Used `mongoimport` command to import the data into MongoDB:
-   ```bash
-   mongoimport --db uk_food --collection establishments --drop --file establishments.json --jsonArray
-   ```
+### Prerequisites
+1. Install Python 3.8 or higher.
+2. Install MongoDB (ensure the server is running on `localhost:27017`).
+3. Install the required Python libraries:
+    ```bash
+    pip install pymongo jupyterlab
+    ```
 
-2. **Libraries Installed**:
-   - `pymongo`
-   - `pprint`
-   - `pandas`
+4. Download the `establishments.json` dataset from the `Resources/` folder.
 
-3. **MongoDB**: The data was stored and manipulated using MongoDB. The database is named `uk_food`, and the collection is `establishments`.
+### Steps
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/eat-safe-love.git
+    cd eat-safe-love
+    ```
 
-## Project Structure
+2. Import the dataset into MongoDB:
+    ```bash
+    mongoimport --db uk_food --collection establishments --drop --file Resources/establishments.json
+    ```
 
-The project is divided into three main parts:
+3. Launch the Jupyter Notebook to run the analysis:
+    ```bash
+    jupyter notebook
+    ```
 
-### 1. **Database and Jupyter Notebook Setup**: 
-   - Import data into MongoDB and prepare the database for analysis.
-   - Perform initial checks and verify the data was correctly loaded.
+4. Open the `Eat_Safe_Love.ipynb` notebook and follow the steps to interact with the database.
 
-   Example code to check the database and collection:
-   ```python
-   from pymongo import MongoClient
-   import pprint
+---
 
-   # Connect to MongoDB and select the database and collection
-   client = MongoClient()
-   db = client['uk_food']
-   collection = db['establishments']
+## Key Features
 
-   # Print the number of documents in the collection
-   pprint.pprint(collection.count_documents({}))
-   ```
+### Database Setup
+- Import data into MongoDB.
+- Verify database creation and data structure.
 
-### 2. **Database Updates**: 
-   - Insert new restaurant data ("Penang Flavours").
-   - Modify the database by adding, updating, and removing documents based on specified criteria.
+### CRUD Operations
+- **Create**: Insert new restaurant data into the database.
+- **Read**: Query data using specific fields and conditions.
+- **Update**: Modify existing records, including geolocation updates.
+- **Delete**: Remove data based on specific criteria.
 
-   Code to insert new data:
-   ```python
-   # Insert a new document (Penang Flavours) into the establishments collection
-   collection.insert_one({
-       "name": "Penang Flavours",
-       "address": "123 Foodie St, London, UK",
-       "rating": 5,
-       "score": 100
-   })
-   ```
+### Data Cleaning
+- Standardize data types for latitude, longitude, and rating values.
+- Handle non-numeric entries in the `RatingValue` field.
 
-   Code to update an existing document:
-   ```python
-   # Update the hygiene score of 'Penang Flavours'
-   collection.update_one(
-       {"name": "Penang Flavours"},
-       {"$set": {"score": 95}}
-   )
-   ```
+### Analysis-Ready Data
+- Prepare the database for future analysis by ensuring the data is clean, structured, and accessible.
 
-   Code to remove a document:
-   ```python
-   # Remove a restaurant based on name
-   collection.delete_one({"name": "Penang Flavours"})
-   ```
+---
 
-### 3. **Exploratory Data Analysis**: 
-   In this section, I answer key questions using MongoDB queries and Python analysis:
+## Code Overview
 
-   **a. Establishments with a hygiene score equal to 20:**
-   ```python
-   # Find establishments with hygiene score of 20
-   query = {"score": 20}
-   results = collection.find(query)
-   pprint.pprint(list(results))
-   ```
+The project is organized into several steps for clarity:
 
-   This query retrieves all establishments that have a hygiene score of 20. We use the `find()` method and pass the query to MongoDB to match the criteria.
+1. **Part 1: Database Setup**
+   - Import the dataset.
+   - Verify database and collection structure.
+   - Connect to MongoDB using PyMongo.
 
-   **b. London establishments with a RatingValue greater than or equal to 4:**
-   ```python
-   # Find London establishments with a RatingValue >= 4
-   query = {"address": {"$regex": "London", "$options": "i"}, "rating": {"$gte": 4}}
-   results = collection.find(query)
-   pprint.pprint(list(results))
-   ```
+2. **Part 2: Update the Database**
+   - Insert new data for a restaurant.
+   - Query for specific fields (e.g., `BusinessTypeID`).
+   - Perform updates for geolocation and data type transformations.
+   - Delete specific entries based on criteria (e.g., establishments in Dover).
 
-   Here, we're looking for establishments in London that have a rating greater than or equal to 4. The `$regex` operator is used to find documents where the address field contains the word "London," and `$options: "i"` makes the regex case-insensitive. The `"$gte": 4` checks for ratings greater than or equal to 4.
+3. **Part 3: Data Cleaning**
+   - Convert string fields (`latitude`, `longitude`, `RatingValue`) to appropriate numeric types.
+   - Handle non-numeric entries gracefully.
 
-   **c. Top 5 establishments with a RatingValue of 5, sorted by hygiene score:**
-   ```python
-   # Find top 5 establishments with RatingValue of 5 and sorted by hygiene score
-   query = {"rating": 5}
-   results = collection.find(query).sort("score", -1).limit(5)
-   pprint.pprint(list(results))
-   ```
+Each operation is performed programmatically using PyMongo, with results verified after each step.
 
-   This query retrieves establishments with a `rating` of 5 and sorts the results by the `score` field in descending order (`-1` means descending order). The `limit(5)` restricts the results to the top 5 establishments.
+---
 
-   **d. Number of establishments with a hygiene score of 0, sorted by Local Authority:**
-   ```python
-   # Find establishments with a hygiene score of 0 and count them per local authority
-   query = {"score": 0}
-   aggregation_pipeline = [
-       {"$match": query},  # Filter documents with hygiene score of 0
-       {"$group": {"_id": "$local_authority", "count": {"$sum": 1}}},  # Group by local authority and count occurrences
-       {"$sort": {"count": -1}}  # Sort by the count in descending order
-   ]
-   results = collection.aggregate(aggregation_pipeline)
-   pprint.pprint(list(results))
-   ```
+## Project Highlights
 
-   In this more complex aggregation query, we're first filtering establishments with a hygiene score of 0 using `$match`. Then, we group the results by `local_authority` and use `$sum` to count the number of establishments in each local authority. Finally, we sort the results by the count in descending order using `$sort`.
+- **Data Cleaning**: Demonstrated ability to handle real-world data challenges, such as inconsistent data types and missing values.
+- **CRUD Mastery**: Performed all key database operations (Create, Read, Update, Delete) with real-world use cases.
+- **Documentation**: Comprehensive documentation ensures reproducibility and clarity for future users and collaborators.
+- **MongoDB Skills**: Showcased proficiency with NoSQL databases and Python integration.
 
-   **e. Establishments that are missing the `rating` field:**
-   ```python
-   # Find establishments with missing 'rating' field
-   query = {"rating": {"$exists": False}}
-   results = collection.find(query)
-   pprint.pprint(list(results))
-   ```
+---
 
-   This query searches for establishments where the `rating` field does not exist (`$exists: False`). It helps identify any missing ratings.
+## Future Improvements
+
+- **Data Visualization**: Integrate Matplotlib or Seaborn to visualize trends in the data.
+- **Web Interface**: Create a frontend using Flask or Django for easier interaction with the database.
+- **Automated Testing**: Add unit tests to ensure database operations are error-free.
+- **Scalability**: Optimize queries for performance with indexing and aggregation pipelines.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
 
 ## Acknowledgements
 
