@@ -138,17 +138,6 @@ The project is divided into three main parts:
 
    This query searches for establishments where the `rating` field does not exist (`$exists: False`). It helps identify any missing ratings.
 
-   **f. Establishments with a score between 70 and 90, ordered by rating:**
-   ```python
-   # Find establishments with a score between 70 and 90, sorted by rating
-   query = {"score": {"$gte": 70, "$lte": 90}}
-   results = collection.find(query).sort("rating", 1)  # Sorting by rating in ascending order
-   pprint.pprint(list(results))
-   ```
-
-   This query finds establishments with a score between 70 and 90, inclusive. We use `$gte` (greater than or equal to) and `$lte` (less than or equal to) to define the range. The results are then sorted by `rating` in ascending order (`1` means ascending).
-
-
 ## Acknowledgements
 
 Thanks to ChatGPT for assistance with coding and troubleshooting.
